@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login Debug</title>
+</head>
+<body>
+    <h1>Login Debug Page</h1>
+    <p>Testing login view functionality...</p>
+    <script>
+        // Test localStorage for token
+        const token = localStorage.getItem('token');
+        const user = localStorage.getItem('user');
+        console.log('localStorage token:', token);
+        console.log('localStorage user:', user);
+        
+        // Test if token exists
+        if (token && user) {
+            console.log('User appears to be logged in');
+        } else {
+            console.log('User is not logged in');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录测试</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 500px; margin: 0 auto; padding: 20px; }
+        input { width: 100%; padding: 10px; margin: 10px 0; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        .result { margin-top: 20px; padding: 10px; background-color: #f0f0f0; border-radius: 4px; }
+        .error { background-color: #ffebee; color: #c62828; }
+        .success { background-color: #e8f5e9; color: #2e7d32; }
+    </style>
+</head>
+<body>
+    <h1>设备报修平台登录测试</h1>
+    <div>
+        <input type="tel" id="phone" placeholder="请输入手机号" value="13800138001">
+        <input type="password" id="password" placeholder="请输入密码" value="123456">
+        <button onclick="testLogin()">测试登录</button>
+    </div>
+    <div id="result" class="result"></div>
+
+    <script>
+        async function testLogin() {
+            const phone = document.getElementById('phone').value;
+            const password = document.getElementById('password').value;
+            const resultDiv = document.getElementById('result');
+            
+            resultDiv.innerHTML = '正在登录...';
+            resultDiv.className = 'result';
+            
+            try {
+                const response = await fetch('http://localhost:3001/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ phone, password })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.innerHTML = `
+                        <div class="success">登录成功!</div>
+                        <strong>Token:</strong> ${data.token.substring(0, 30)}...<br>
+                        <strong>用户信息:</strong><br>
+                        姓名: ${data.user.name}<br>
+                        手机号: ${data.user.phone}<br>
+                        角色: ${data.user.role}
+                    `;
+                } else {
+                    resultDiv.innerHTML = `<div class="error">登录失败: ${data.message || '未知错误'}</div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">网络错误: ${error.message}</div>`;
+            }
+        }
+    </script>
+</body>
+</html>
